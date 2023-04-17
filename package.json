@@ -1,0 +1,24 @@
+{
+
+  "scripts": {
+
+    "dev": "next dev"
+
+  },
+
+  "dependencies": {
+
+    "buffer": "^6.0.3",
+
+    "dotenv": "^16.0.3",
+
+    "next": "^13.3.0",
+
+    "react": "^18.2.0",
+
+    "react-dom": "^18.2.0"
+
+  }
+
+}
+

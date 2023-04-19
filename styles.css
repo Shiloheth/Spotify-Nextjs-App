@@ -14,26 +14,46 @@ body{
     background-image:  url(./assets/background.jpg);
     background-size: cover;
     display: block;
-    filter: blur(8px);
+    filter: blur(30px);
     height: 100%;
     width: 100%;
     left: 0;
     position: absolute;
     top:0;
     z-index: 1;
+    
+    
 }
 
+
+
+
+.main::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0.5; /* adjust the opacity value to control the darkness */
+}
+
+
 .content{
-  box-shadow: 0 0 10px 5px;
+  box-shadow: 0 0 10px 1px;
   background-image: url(./assets/background.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   overflow: hidden;
   z-index: 2;
-  height:240px;
-  width:240px;
-  margin-bottom: 100px;
+  height:280px;
+  width:280px;
+  margin-bottom: 50px;
+  position: relative;
+  color: black;
  
 }
 
@@ -50,11 +70,49 @@ body{
 .time{
   z-index: 4;
   font-size: x-large;
+  color: #453F3D;
 }
 
 .date{
   z-index: 4;
-  font-size: smaller;
+  font-size: large;
   margin-bottom: 30px;
+  color: #453F3D;
 
+}
+
+.track{
+  border: 0.1px solid#453F3D;
+  z-index: 4;
+  padding: 5px 70px;
+  text-align: center;
+  color: #453F3D;
+  box-shadow: 0 0 10px 1px;
+  margin-top: 20px;
+
+}
+
+.song{
+  z-index: 4;
+  font-size: x-large;
+  font-weight: bold;
+
+}
+
+.artist{
+  z-index: 4;
+  font-size:medium;
+  font-weight:650;
+}
+
+.play{
+  z-index: 5;
+  border: 0px solid#453F3D;
+  padding: 10px;
+  font-size: large;
+  font-weight: 800;
+  cursor: pointer;
+  background:transparent;
+  color: #453F3D;
+  box-shadow: 0 0 10px 1px;
 }

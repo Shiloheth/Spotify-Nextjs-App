@@ -4,6 +4,8 @@ import React, { useRef } from 'react';
 import dynamic from 'next/dynamic'
 import CurrentDate from '../components/Curretdate';
 import MyComponent from '../components/Sound';
+import { supabase } from './../lib/supabaseClient';
+
 
 
 const ComponentWithNoSSR = dynamic(() => import('../components/Time'), { ssr: false });
@@ -11,17 +13,20 @@ const ComponentWithNoSSR = dynamic(() => import('../components/Time'), { ssr: fa
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
 const code = process.env.NEXT_PUBLIC_CODE;
-const redirect_uri = 'http://localhost:3000/';
-let access_token = null;
 
 
 
 
 export default function HomePage() {
   const inputRef = useRef(null);
+  const intervalId = setInterval(() => {
+    if (inputRef.current?.paused) {
+      fetchSongs();
+    }
+  }, 5000);
 
-
-async function getRecentlyPlayed() {
+  async function fetchSongs() {
+  const access_token = await getToken()
   const feedback = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
     headers: {
       'Authorization': 'Bearer ' + access_token
@@ -29,9 +34,7 @@ async function getRecentlyPlayed() {
   })
 
   const result = await feedback.json()
-
-  if (result.is_playing === false||result.currently_playing_type !== "track"
-  ) {
+  if (result.is_playing === false || result.currently_playing_type !== 'track') {
     const feedback = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1", {
       headers: {
         'Authorization': 'Bearer ' + access_token
@@ -45,20 +48,28 @@ async function getRecentlyPlayed() {
     document.querySelector('.artist').textContent = result.items[0].track.artists[0].name
     document.querySelector('.song').textContent = result.items[0].track.name
     inputRef.current.src = result.items[0].track.preview_url;
-    console.log(result)
   } else {
-    console.log(result)
     document.querySelector('.main').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.artist').textContent = result.item.artists[0].name
     document.querySelector('.song').textContent = result.item.name
+    inputRef.current.src = result.item.preview_url;
   }
-}
 
- 
+  
 
 
-async function getAccessToken(){
+
+
+
+
+   }
+
+
+
+
+
+ async function getAccessToken(){
   const tokenUrl = "https://accounts.spotify.com/api/token";
   const auth = Buffer.from(client_id + ':' + client_secret).toString('base64');
   const options = {
@@ -72,26 +83,19 @@ async function getAccessToken(){
   
   const response = await fetch(tokenUrl,options);
   const data = await response.json();
-  access_token = data.access_token;
+  console.log(data)
+  const access_token = data.access_token;
+
   
-  let intervalId = null;
-  
-  function startInterval() {
-      intervalId = setInterval(() => {
-          if(inputRef.current.paused) {
-              getRecentlyPlayed();
-          }
-      }, 5000);
-  }
-  
-  function stopInterval() {
-      clearInterval(intervalId);
-  }
-  
-  startInterval();
+  updateToken(1, data.access_token)
+  setrefreshtoken(1,data.refresh_token)
+  getToken()
+
+
+
   
   // Manually clear the interval when the component unmounts
-}
+ }
 
  
   return (
@@ -101,8 +105,8 @@ async function getAccessToken(){
         <ComponentWithNoSSR />
         <CurrentDate /> 
         <div className='content'>
-          <button onClick={authorization}>Like</button>
-          <button onClick={getAccessToken}>Access</button>
+          <button onClick={getRefreshToken}>Refresh</button>
+          <button onClick={fetchSongs}>fetchsongs</button>
         </div>
         <MyComponent audioref={inputRef} />
         <div className='track'>
@@ -127,7 +131,8 @@ function authorization(){
 
 
  async function getRefreshToken() {
-  const refresh_token = process.env.NEXT_PUBLIC_REFRESH_TOKEN;
+  const refresh_token = await getRefresh()
+  console.log(refresh_token)
   const url = 'https://accounts.spotify.com/api/token';
 
   const authOptions = {
@@ -143,10 +148,56 @@ function authorization(){
     const res = await fetch(url, authOptions);
     console.log(res); // log the response object
     const data = await res.json();
-    console.log(data);
+    updateToken(1,data.access_token)
   } catch (error) {
     console.error(error);
   }
 }
 
       
+async function setrefreshtoken(id,refreshtoken){
+ 
+    const { data, error } = await supabase
+      .from('RefreshToken')
+      .update({ Refreshtoken: refreshtoken })
+      .eq('id', id)
+  
+    if (error) {
+      console.log(error)
+    }
+  
+    
+  
+}
+
+async function getToken() {
+
+  let { data } = await supabase.from('Token').select()
+  return data[0].accessTokens
+}
+
+async function getRefresh() {
+
+  let { data } = await supabase.from('RefreshToken').select()
+  console.log(data[0].Refreshtoken)
+  return data[0].Refreshtoken
+}
+
+ async function updateToken (id, newToken) {
+  const { data, error } = await supabase
+    .from('Token')
+    .update({ accessTokens: newToken })
+    .eq('id', id)
+
+  if (error) {
+    console.log(error)
+  }
+
+
+}
+
+
+
+
+
+

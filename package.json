@@ -8,11 +8,15 @@
 
   "dependencies": {
 
+    "@supabase/supabase-js": "^2.21.0",
+
     "buffer": "^6.0.3",
 
     "dotenv": "^16.0.3",
 
     "next": "^13.3.0",
+
+    "nextjs-progressbar": "^0.0.16",
 
     "react": "^18.2.0",
 

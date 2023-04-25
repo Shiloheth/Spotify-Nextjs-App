@@ -13,7 +13,7 @@ const ComponentWithNoSSR = dynamic(() => import('../components/Time'), { ssr: fa
 const client_id = process.env.NEXT_PUBLIC_CLIENT_ID;
 const client_secret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
 const code = process.env.NEXT_PUBLIC_CODE;
-
+const redirect_uri = 'http://localhost:3000/'
 
 
 
@@ -24,6 +24,10 @@ export default function HomePage() {
       fetchSongs();
     }
   }, 5000);
+
+  const refreshIntervalId = setInterval(() => {
+ getRefreshToken()
+  }, 3600000);
 
   async function fetchSongs() {
   const access_token = await getToken()
@@ -42,7 +46,7 @@ export default function HomePage() {
     })
 
     const result = await feedback.json()
-
+                           
     document.querySelector('.main').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.artist').textContent = result.items[0].track.artists[0].name
@@ -84,7 +88,6 @@ export default function HomePage() {
   const response = await fetch(tokenUrl,options);
   const data = await response.json();
   console.log(data)
-  const access_token = data.access_token;
 
   
   updateToken(1, data.access_token)
@@ -94,7 +97,6 @@ export default function HomePage() {
 
 
   
-  // Manually clear the interval when the component unmounts
  }
 
  
@@ -105,8 +107,6 @@ export default function HomePage() {
         <ComponentWithNoSSR />
         <CurrentDate /> 
         <div className='content'>
-          <button onClick={getRefreshToken}>Refresh</button>
-          <button onClick={fetchSongs}>fetchsongs</button>
         </div>
         <MyComponent audioref={inputRef} />
         <div className='track'>

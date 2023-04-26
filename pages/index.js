@@ -86,7 +86,6 @@ export default function HomePage() {
   }
   }
   catch(error){
-    console.log(error.message)
     if(error.message==='The access token expired'){
     getRefreshToken()}
   }

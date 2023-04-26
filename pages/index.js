@@ -49,7 +49,8 @@ export default function HomePage() {
   })
 
   const result = await feedback.json()
-  
+
+  if(!feedback.ok){throw new Error(result.error.message)}
 
 
 
@@ -85,7 +86,7 @@ export default function HomePage() {
   }
   }
   catch(error){
-  
+    console.log(error.message)
     if(error.message==='The access token expired'){
     getRefreshToken()}
   }

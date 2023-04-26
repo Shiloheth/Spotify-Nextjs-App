@@ -1,10 +1,11 @@
 import { Buffer } from 'buffer';
-import React, { useRef } from 'react';
+import React, { useRef,useState,useEffect } from 'react';
 
 import dynamic from 'next/dynamic'
 import CurrentDate from '../components/Curretdate';
 import MyComponent from '../components/Sound';
 import { supabase } from './../lib/supabaseClient';
+import Loader from '../components/Loader';
 
 
 
@@ -19,18 +20,28 @@ const redirect_uri = 'http://localhost:3000/'
 
 export default function HomePage() {
   const inputRef = useRef(null);
-  const intervalId = setInterval(() => {
-    if (inputRef.current?.paused) {
-      fetchSongs();
-    }
-  }, 5000);
+  const[isPlaying,setIsPlaying]=useState(false)
+  const[lastSeen,setLastSeen] = useState(null)
 
-  const refreshIntervalId = setInterval(() => {
- getRefreshToken()
-  }, 3600000);
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (inputRef.current?.paused) {
+        fetchSongs();
+      }
+  
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+ 
+
 
   async function fetchSongs() {
   const access_token = await getToken()
+  try{
   const feedback = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
     headers: {
       'Authorization': 'Bearer ' + access_token
@@ -38,29 +49,46 @@ export default function HomePage() {
   })
 
   const result = await feedback.json()
+  
+
+
+
+ 
+
   if (result.is_playing === false || result.currently_playing_type !== 'track') {
+
     const feedback = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1", {
       headers: {
         'Authorization': 'Bearer ' + access_token
       }
     })
-
+    
+ 
     const result = await feedback.json()
-                           
+    setIsPlaying(false)
+    setLastSeen(result.items[0].played_at.slice(11,19))                    
     document.querySelector('.main').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.artist').textContent = result.items[0].track.artists[0].name
     document.querySelector('.song').textContent = result.items[0].track.name
     inputRef.current.src = result.items[0].track.preview_url;
-  } else {
+    document.querySelector('.loader').classList.remove("loader")
+
+  } else{
+    setIsPlaying(true)
     document.querySelector('.main').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.artist').textContent = result.item.artists[0].name
     document.querySelector('.song').textContent = result.item.name
     inputRef.current.src = result.item.preview_url;
+    document.querySelector('.loader').classList.remove("loader");
   }
-
+  }
+  catch(error){
   
+    if(error.message==='The access token expired'){
+    getRefreshToken()}
+  }
 
 
 
@@ -87,7 +115,7 @@ export default function HomePage() {
   
   const response = await fetch(tokenUrl,options);
   const data = await response.json();
-  console.log(data)
+ 
 
   
   updateToken(1, data.access_token)
@@ -102,16 +130,21 @@ export default function HomePage() {
  
   return (
      <>
+      
        <div className='main'></div> 
+       <Loader/>
+       {isPlaying?<div className='circle'>LIVE</div>:<div className='lastSeen'>Last Seen:{lastSeen}</div>}
        <div className='container'>  
         <ComponentWithNoSSR />
         <CurrentDate /> 
         <div className='content'>
         </div>
         <MyComponent audioref={inputRef} />
+   
         <div className='track'>
           <div className='song'></div>
           <div className='artist'></div>
+      
         </div>
        </div>
      </>
@@ -132,7 +165,6 @@ function authorization(){
 
  async function getRefreshToken() {
   const refresh_token = await getRefresh()
-  console.log(refresh_token)
   const url = 'https://accounts.spotify.com/api/token';
 
   const authOptions = {
@@ -146,11 +178,10 @@ function authorization(){
 
   try {
     const res = await fetch(url, authOptions);
-    console.log(res); // log the response object
     const data = await res.json();
     updateToken(1,data.access_token)
   } catch (error) {
-    console.error(error);
+   
   }
 }
 
@@ -163,7 +194,7 @@ async function setrefreshtoken(id,refreshtoken){
       .eq('id', id)
   
     if (error) {
-      console.log(error)
+    
     }
   
     
@@ -179,7 +210,7 @@ async function getToken() {
 async function getRefresh() {
 
   let { data } = await supabase.from('RefreshToken').select()
-  console.log(data[0].Refreshtoken)
+ 
   return data[0].Refreshtoken
 }
 
@@ -190,7 +221,7 @@ async function getRefresh() {
     .eq('id', id)
 
   if (error) {
-    console.log(error)
+   
   }
 
 

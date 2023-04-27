@@ -54,8 +54,9 @@ export default function HomePage() {
         const text = await request.json()
         throw new Error(text.error.message)}
         const result = request.status===200?await request.json():null
+  
       //if what is a song isn't currently being played or the playing type isnt a track fetch data from the recently played endpoint
-      if (result.is_playing === false || result.currently_playing_type !== 'track'||result===null) {
+      if (result===null||result.is_playing === false || result.currently_playing_type !== 'track') {
         const request = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1",headers)
         const result = await request.json() 
         setIsPlaying(false)

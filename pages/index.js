@@ -53,13 +53,9 @@ export default function HomePage() {
       if(!request.ok){
         const text = await request.json()
         throw new Error(text.error.message)}
-
-        const result = await request.json()
-      
-
-  
+        const result = request.status===200?await request.json():null
       //if what is a song isn't currently being played or the playing type isnt a track fetch data from the recently played endpoint
-      if (result.is_playing === false || result.currently_playing_type !== 'track') {
+      if (result.is_playing === false || result.currently_playing_type !== 'track'||result===null) {
         const request = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1",headers)
         const result = await request.json() 
         setIsPlaying(false)
@@ -69,7 +65,7 @@ export default function HomePage() {
         document.querySelector('.content').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
         document.querySelector('.artist').textContent = result.items[0].track.artists[0].name
         document.querySelector('.song').textContent = result.items[0].track.name
-        document.querySelector('.loader').classList.remove("loader")
+        document.querySelector('.loader')?.classList.remove("loader")
 
         } 
       else{
@@ -79,7 +75,7 @@ export default function HomePage() {
         document.querySelector('.content').style.backgroundImage = `url(${result.item.album.images[0].url})`
         document.querySelector('.artist').textContent = result.item.artists[0].name
         document.querySelector('.song').textContent = result.item.name
-        document.querySelector('.loader').classList.remove("loader");
+        document.querySelector('.loader')?.classList.remove("loader");
       }
     }
     catch(error){

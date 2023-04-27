@@ -193,16 +193,13 @@ async function setrefreshtoken(id,refreshtoken){
       .update({ Refreshtoken: refreshtoken })
       .eq('id', id)
   
-    if (error) {
-    
-    }
+
   
     
   
 }
 
 async function getToken() {
-
   let { data } = await supabase.from('Token').select()
   return data[0].accessTokens
 }
@@ -210,7 +207,6 @@ async function getToken() {
 async function getRefresh() {
 
   let { data } = await supabase.from('RefreshToken').select()
- 
   return data[0].Refreshtoken
 }
 
@@ -219,10 +215,6 @@ async function getRefresh() {
     .from('Token')
     .update({ accessTokens: newToken })
     .eq('id', id)
-
-  if (error) {
-   
-  }
 
 
 }

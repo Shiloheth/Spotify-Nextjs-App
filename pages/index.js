@@ -55,7 +55,7 @@ export default function HomePage() {
         throw new Error(text.error.message)}
 
         const result = await request.json()
-        console.log(result)
+      
 
   
       //if what is a song isn't currently being played or the playing type isnt a track fetch data from the recently played endpoint
@@ -104,7 +104,6 @@ export default function HomePage() {
   
     const response = await fetch(tokenUrl,options);
     const data = await response.json();
-    console.log(data)
     updateToken(1, data.access_token)
     setrefreshtoken(1,data.refresh_token)
     getToken()
@@ -205,7 +204,6 @@ async function fetchRecipes() {
       throw new Error(response.status);
     }
   } catch (error) {
-    console.error(error);
     // handle error
   }
 }

@@ -96,7 +96,7 @@ body{
 .artist{
   z-index: 4;
   font-size:medium;
-  font-weight:650;
+  font-weight:bold;
 }
 
 .play{

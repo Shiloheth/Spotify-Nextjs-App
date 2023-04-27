@@ -50,14 +50,12 @@ export default function HomePage() {
 
   const result = await feedback.json()
 
-  if(!feedback.ok){throw new Error(result.error.message)}
-
-
 
  
 
-  if (result.is_playing === false || result.currently_playing_type !== 'track') {
+  if (result.is_playing === false || result.currently_playing_type !== 'track' || feedback.status!==200) {
 
+  
     const feedback = await fetch("https://api.spotify.com/v1/me/player/recently-played?limit=1", {
       headers: {
         'Authorization': 'Bearer ' + access_token
@@ -67,21 +65,22 @@ export default function HomePage() {
  
     const result = await feedback.json()
     setIsPlaying(false)
-    setLastSeen(result.items[0].played_at.slice(11,19))                    
+    setLastSeen(result.items[0].played_at.slice(11,19))       
+    inputRef.current.src = result.items[0].track.preview_url;             
     document.querySelector('.main').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`
     document.querySelector('.artist').textContent = result.items[0].track.artists[0].name
     document.querySelector('.song').textContent = result.items[0].track.name
-    inputRef.current.src = result.items[0].track.preview_url;
     document.querySelector('.loader').classList.remove("loader")
 
   } else{
     setIsPlaying(true)
+    inputRef.current.src = result.item.preview_url;
     document.querySelector('.main').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.content').style.backgroundImage = `url(${result.item.album.images[0].url})`
     document.querySelector('.artist').textContent = result.item.artists[0].name
     document.querySelector('.song').textContent = result.item.name
-    inputRef.current.src = result.item.preview_url;
+    
     document.querySelector('.loader').classList.remove("loader");
   }
   }

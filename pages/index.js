@@ -71,7 +71,9 @@ export default function HomePage() {
         } 
       else{
         setIsPlaying(true)
-        inputRef.current.src = result.item.preview_url;
+        if(inputRef.current.src !== result.item.preview_url){
+          inputRef.current.src = result.item.preview_url
+        };
         document.querySelector('.main').style.backgroundImage = `url(${result.item.album.images[0].url})`
         document.querySelector('.content').style.backgroundImage = `url(${result.item.album.images[0].url})`
         document.querySelector('.artist').textContent = result.item.artists[0].name
@@ -80,7 +82,6 @@ export default function HomePage() {
       }
     }
     catch(error){
-     
       if(error.message==='The access token expired'){
       getRefreshToken()}
     }
@@ -112,7 +113,7 @@ export default function HomePage() {
      <>
         <div className='main'></div> 
         <Loader/>
-        {isPlaying?<div className='circle'>LIVE</div>:<div className='lastSeen'>Last Seen:{lastSeen}</div>}
+        {isPlaying?<div className='text'><div className='circle'>LIVE</div></div>:<div className='lastSeen'>Last Seen:{lastSeen}</div>}
         <div className='container'>  
           <ComponentWithNoSSR />
           <CurrentDate /> 
@@ -124,6 +125,7 @@ export default function HomePage() {
 
           </div>
        </div>
+       
      </>
    );
    }          
@@ -190,17 +192,3 @@ export default function HomePage() {
 
 
 
-
-async function fetchRecipes() {
-  try {
-    const response = await fetch('https://api.spoonacular.com/recipes/complexSearch');
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      throw new Error(response.status);
-    }
-  } catch (error) {
-    // handle error
-  }
-}

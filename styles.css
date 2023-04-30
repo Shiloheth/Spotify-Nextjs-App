@@ -12,21 +12,16 @@ body{
 }
 
 .main{
-    filter:blur(15px);
-    display: block;
-    height: 100%;
-    width: 100%;
-    left: 0;
-    position: absolute;
-    top:0;
-    z-index: 1;
-    background-size: cover;
-    
-    
+  filter:blur(15px);
+  display: block;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  position: absolute;
+  top:0;
+  z-index: 1;
+  background-size: cover;
 }
-
-
-
 
 .main::before {
   content: "";
@@ -39,7 +34,6 @@ body{
   background-color:#E1D9D1;
   opacity: 0.9; /* adjust the opacity value to control the darkness */
 }
-
 
 .content{
   box-shadow: 0 0 10px 1px;
@@ -112,12 +106,14 @@ body{
   border-radius: 15.5555555556rem;
 
 }
+
 .play:hover{
   background-color: rgba(0,0,0,.8);
   color: hsla(0,0%,100%,.99);
   text-shadow: none;
 
 }
+
 .lastSeen{
   position: absolute;
   left: 10px;
@@ -143,34 +139,33 @@ body{
   color: #1B1212;
 }
 
-  .circle::before {
-    content: "";
-    position: relative;
-    display: block;
-    width: 250%;
-    height: 250%;
-    box-sizing: border-box;
-    margin-left: -75%;
-    margin-top: -75%;
-    border-radius: 45px;
-    background-color: red;
-    animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+.circle::before {
+  content: "";
+  position: relative;
+  display: block;
+  width: 250%;
+  height: 250%;
+  box-sizing: border-box;
+  margin-left: -75%;
+  margin-top: -75%;
+  border-radius: 45px;
+  background-color: red;
+  animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
   }
 
-  .circle::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    background-color: red;
-    border-radius: 50px;
-    animation: circle 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
-    margin-left: 25px;
+.circle::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: red;
+  border-radius: 50px;
+  animation: circle 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
+  margin-left: 25px;
   }
-
 
 @keyframes pulse {
   0% {
@@ -194,8 +189,6 @@ body{
   }
 }
 
-
-
 .loader {
   position: absolute;
   z-index: 98;
@@ -208,31 +201,30 @@ body{
  
 }
 
-  .loadercircle {
-    position: absolute;
-    width: 38px;
-    height: 38px;
-    opacity: 0;
-    transform: rotate(225deg);
-    animation-iteration-count: infinite;
-    animation-name: orbit;
-    animation-duration: 5.5s;}
+.loadercircle {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  opacity: 0;
+  transform: rotate(225deg);
+  animation-iteration-count: infinite;
+  animation-name: orbit;
+  animation-duration: 5.5s;}
     
-    .loadercircle::after {
-      content: '';
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      border-radius: 5px;
-      background: #fff; /* Pick a color */
-    }
+.loadercircle::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background: #fff; /* Pick a color */
+}
     
-    .loadercircle:nth-child(2) {  animation-delay: 240ms; }
-    .loadercircle:nth-child(3) {  animation-delay: 480ms; }
-    .loadercircle:nth-child(4) {  animation-delay: 720ms; }
-    .loadercircle:nth-child(5) {  animation-delay: 960ms; }
+.loadercircle:nth-child(2) {  animation-delay: 240ms; }
+.loadercircle:nth-child(3) {  animation-delay: 480ms; }
+.loadercircle:nth-child(4) {  animation-delay: 720ms; }
+.loadercircle:nth-child(5) {  animation-delay: 960ms; }
   
-
 
 @keyframes orbit { 
   0%   { transform:rotate(225deg); opacity: 1;

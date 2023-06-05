@@ -285,3 +285,33 @@ body {
   font-weight: 800;
   color: antiquewhite;
 }
+
+.progressbar {
+  height: 3px;
+  width: 200px;
+  background-color: gray;
+  z-index: 5;
+  margin-bottom: 9px;
+}
+
+.progressbar1 {
+  height: 3px;
+  width: 20px;
+  background-color: #1b1212;
+  z-index: 5;
+  margin-bottom: 9px;
+  animation: progressBarAnimation 30s linear infinite;
+}
+
+@keyframes progressBarAnimation {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.progressbar1.paused {
+  animation-play-state: paused;
+}

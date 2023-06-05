@@ -138,6 +138,7 @@ export default function HomePage() {
         <ComponentWithNoSSR />
         <CurrentDate />
         <div className="content"></div>
+
         <MyComponent audioref={inputRef} />
         <div className="track">
           <div className="song"></div>

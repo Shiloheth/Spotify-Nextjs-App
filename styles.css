@@ -1,24 +1,24 @@
-body{
+body {
   margin: 0;
   padding: 0;
   font-family: Meiryo, "Hiragino Kaku Gothic Pro W3", Courier New, sans-serif;
   color: antiquewhite;
 }
 
-#__next{
+#__next {
   height: 100vh;
-  width:100%;
+  width: 100%;
   position: relative;
 }
 
-.main{
-  filter:blur(15px);
+.main {
+  filter: blur(15px);
   display: block;
   height: 100%;
   width: 100%;
   left: 0;
   position: absolute;
-  top:0;
+  top: 0;
   z-index: 1;
   background-size: cover;
 }
@@ -31,97 +31,100 @@ body{
   left: 0;
   width: 100%;
   height: 100%;
-  background-color:#E1D9D1;
+  background-color: #e1d9d1;
   opacity: 0.9; /* adjust the opacity value to control the darkness */
 }
 
-.content{
+.content {
   box-shadow: 0 0 10px 1px;
   z-index: 2;
-  height:280px;
-  width:280px;
+  height: 280px;
+  width: 280px;
   margin-bottom: 50px;
   position: relative;
   color: black;
   background-size: contain;
- 
 }
 
-.container{
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   height: 100%;
   position: relative;
-
 }
 
-.time{
+.time {
   z-index: 4;
   font-size: x-large;
-  color: #1B1212;
+  color: #1b1212;
+  padding-top: 30px;
 }
 
-.date{
+.date {
   z-index: 4;
   font-size: large;
   margin-bottom: 30px;
-  color: #1B1212;
-
+  color: #1b1212;
 }
 
-.track{
+.track {
   z-index: 4;
   padding: 5px 70px;
   text-align: center;
-  color: #1B1212;
+  color: #1b1212;
   margin-top: 20px;
-
 }
 
-.song{
+.song {
   z-index: 4;
   font-size: x-large;
   font-weight: bold;
-
 }
 
-.artist{
+.artist {
   z-index: 4;
-  font-size:medium;
-  font-weight:bold;
+  font-size: medium;
+  font-weight: bold;
 }
 
-.play{
+.play {
   z-index: 5;
   padding: 10px;
   font-size: large;
   font-weight: 800;
   cursor: pointer;
-  background:transparent;
-  color: #E1D9D1;
+  background: transparent;
+  color: #e1d9d1;
   background-color: #000d10;
-  border:none;
+  border: none;
   border-radius: 15.5555555556rem;
-
 }
 
-.play:hover{
-  background-color: rgba(0,0,0,.8);
-  color: hsla(0,0%,100%,.99);
+.play:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: hsla(0, 0%, 100%, 0.99);
   text-shadow: none;
-
 }
 
-.lastSeen{
+.lastSeen {
   position: absolute;
   left: 10px;
   top: 10px;
   z-index: 90;
-  color: #1B1212;
+  color: #1b1212;
   font-weight: 900;
-  font-size: large
+  font-size: large;
+}
+
+@media (max-width: 550px) {
+  .lastSeen {
+    font-size: larger;
+    font-weight: 700;
+
+    /* Add any other styles specific to smaller screens here */
+  }
 }
 
 .circle {
@@ -136,7 +139,7 @@ body{
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: #1B1212;
+  color: #1b1212;
 }
 
 .circle::before {
@@ -151,7 +154,7 @@ body{
   border-radius: 45px;
   background-color: red;
   animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-  }
+}
 
 .circle::after {
   content: "";
@@ -165,7 +168,7 @@ body{
   border-radius: 50px;
   animation: circle 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
   margin-left: 25px;
-  }
+}
 
 @keyframes pulse {
   0% {
@@ -192,13 +195,12 @@ body{
 .loader {
   position: absolute;
   z-index: 98;
-  background:#000000;
-  height:100%;
-  width:100%;
+  background: #000000;
+  height: 100%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
- 
 }
 
 .loadercircle {
@@ -209,49 +211,77 @@ body{
   transform: rotate(225deg);
   animation-iteration-count: infinite;
   animation-name: orbit;
-  animation-duration: 5.5s;}
-    
+  animation-duration: 5.5s;
+}
+
 .loadercircle::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 5px;
   height: 5px;
   border-radius: 5px;
   background: #fff; /* Pick a color */
 }
-    
-.loadercircle:nth-child(2) {  animation-delay: 240ms; }
-.loadercircle:nth-child(3) {  animation-delay: 480ms; }
-.loadercircle:nth-child(4) {  animation-delay: 720ms; }
-.loadercircle:nth-child(5) {  animation-delay: 960ms; }
-  
 
-@keyframes orbit { 
-  0%   { transform:rotate(225deg); opacity: 1;
-         animation-timing-function: ease-out; } 
-    
-  7%   { transform:rotate(345deg);
-         animation-timing-function: linear; }
-    
-  30%   { transform:rotate(455deg);
-          animation-timing-function: ease-in-out; }
-    
-  39%   { transform:rotate(690deg);
-          animation-timing-function: linear; }
-    
-  70%   { transform:rotate(815deg); opacity: 1;
-         animation-timing-function: ease-out; }
-    
-  75%   { transform:rotate(945deg); 
-         animation-timing-function: ease-out; }
-    
-  76% { transform:rotate(945deg); opacity: 0; }
-  100% { transform:rotate(945deg); opacity: 0; } 
+.loadercircle:nth-child(2) {
+  animation-delay: 240ms;
+}
+.loadercircle:nth-child(3) {
+  animation-delay: 480ms;
+}
+.loadercircle:nth-child(4) {
+  animation-delay: 720ms;
+}
+.loadercircle:nth-child(5) {
+  animation-delay: 960ms;
 }
 
-.loading{
+@keyframes orbit {
+  0% {
+    transform: rotate(225deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  7% {
+    transform: rotate(345deg);
+    animation-timing-function: linear;
+  }
+
+  30% {
+    transform: rotate(455deg);
+    animation-timing-function: ease-in-out;
+  }
+
+  39% {
+    transform: rotate(690deg);
+    animation-timing-function: linear;
+  }
+
+  70% {
+    transform: rotate(815deg);
+    opacity: 1;
+    animation-timing-function: ease-out;
+  }
+
+  75% {
+    transform: rotate(945deg);
+    animation-timing-function: ease-out;
+  }
+
+  76% {
+    transform: rotate(945deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate(945deg);
+    opacity: 0;
+  }
+}
+
+.loading {
   margin-top: 200px;
   font-size: x-large;
   font-weight: 800;
-  color: antiquewhite
+  color: antiquewhite;
 }

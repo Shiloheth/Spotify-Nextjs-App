@@ -1,12 +1,6 @@
 import HomePage from ".";
-import '../styles.css'
-import Page from ".";
-
+import "../styles.css";
 
 export default function App({ pageProps }) {
-  return <HomePage />
+  return <HomePage />;
 }
- 
-
-
-

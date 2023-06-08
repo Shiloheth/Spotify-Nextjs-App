@@ -4,8 +4,8 @@ import React, { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import CurrentDate from "../components/Curretdate";
 import MyComponent from "../components/Sound";
-import { supabase } from "./../lib/supabaseClient";
 import Loader from "../components/Loader";
+import { getRefreshToken, getToken } from "../components/utils";
 
 const ComponentWithNoSSR = dynamic(() => import("../components/Time"), {
   ssr: false,
@@ -20,6 +20,7 @@ export default function HomePage() {
   const inputRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [lastSeen, setLastSeen] = useState(null);
+  const [song, setSong] = useState(null);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -67,7 +68,10 @@ export default function HomePage() {
         const result = await request.json();
         setIsPlaying(false);
         setLastSeen(result.items[0].played_at.slice(11, 19));
-        inputRef.current.src = result.items[0].track.preview_url;
+        if (inputRef.current.src !== result.items[0].track.preview_url) {
+          inputRef.current.src = result.items[0].track.preview_url;
+          setSong(result.items[0].track.preview_url);
+        }
         document.querySelector(
           ".main"
         ).style.backgroundImage = `url(${result.items[0].track.album.images[0].url})`;
@@ -83,6 +87,7 @@ export default function HomePage() {
         setIsPlaying(true);
         if (inputRef.current.src !== result.item.preview_url) {
           inputRef.current.src = result.item.preview_url;
+          setSong(result.item.preview_url);
         }
         document.querySelector(
           ".main"
@@ -102,27 +107,6 @@ export default function HomePage() {
     }
   }
 
-  async function getAccessToken() {
-    const tokenUrl = "https://accounts.spotify.com/api/token";
-    const auth = Buffer.from(client_id + ":" + client_secret).toString(
-      "base64"
-    );
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${auth}`,
-      },
-      body: `grant_type=authorization_code&redirect_uri=${redirect_uri}&code=${code}`,
-    };
-
-    const response = await fetch(tokenUrl, options);
-    const data = await response.json();
-    updateToken(1, data.access_token);
-    setrefreshtoken(1, data.refresh_token);
-    getToken();
-  }
-
   return (
     <>
       <div className="main"></div>
@@ -139,7 +123,7 @@ export default function HomePage() {
         <CurrentDate />
         <div className="content"></div>
 
-        <MyComponent audioref={inputRef} />
+        <MyComponent audioref={inputRef} aud={song} />
         <div className="track">
           <div className="song"></div>
           <div className="artist"></div>
@@ -147,54 +131,4 @@ export default function HomePage() {
       </div>
     </>
   );
-}
-
-function authorization() {
-  const scope = "user-read-currently-playing user-read-recently-played";
-  const url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=code&redirect_uri=${redirect_uri}&scope=${scope}`;
-  window.location.href = url;
-}
-
-async function getRefreshToken() {
-  const refresh_token = await getRefresh();
-  const url = "https://accounts.spotify.com/api/token";
-
-  const authOptions = {
-    method: "POST",
-    headers: {
-      Authorization:
-        "Basic " +
-        Buffer.from(client_id + ":" + client_secret).toString("base64"),
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: `grant_type=refresh_token&refresh_token=${refresh_token}`,
-  };
-
-  const res = await fetch(url, authOptions);
-  const data = await res.json();
-  updateToken(1, data.access_token);
-}
-
-async function setrefreshtoken(id, refreshtoken) {
-  const { data, error } = await supabase
-    .from("RefreshToken")
-    .update({ Refreshtoken: refreshtoken })
-    .eq("id", id);
-}
-
-async function getToken() {
-  let { data } = await supabase.from("Token").select();
-  return data[0].accessTokens;
-}
-
-async function getRefresh() {
-  let { data } = await supabase.from("RefreshToken").select();
-  return data[0].Refreshtoken;
-}
-
-async function updateToken(id, newToken) {
-  const { data, error } = await supabase
-    .from("Token")
-    .update({ accessTokens: newToken })
-    .eq("id", id);
 }
